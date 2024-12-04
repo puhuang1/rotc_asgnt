@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: crud-app
+  name: crud-app-db-deployment
+  labels:
+    app: crud-app-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crud-app-db
+  template:
+    metadata:
+      labels:
+        app: crud-app-db
+    spec:
+      containers:
+        - name: db
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+          env:
+          - name: POSTGRES_DB
+            value: postgres
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: crud-app-secrets
+                key: db-password
